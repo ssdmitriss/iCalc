@@ -30,11 +30,44 @@ class CalculatorViewController: UIViewController {
     private var complexNum: ComplexNum?
     private var generalNum: GeneralComplexNum?
     private var expNum: ExpComplexNum?
+   
     
     private var clearPasteIndincator = true
     
+    @IBOutlet weak var calculationMethodStackView: UIStackView!
+    @IBOutlet var allVerticalConstraints: [NSLayoutConstraint]!
+    
+    
+    override func updateViewConstraints() {
+        
+        if (812...896).contains(self.view.frame.size.height) {
+            
+        } else if view.layer.bounds.height == 667 {
+            allVerticalConstraints[0].constant = 24
+            allVerticalConstraints[5].constant = 48
+            allVerticalConstraints[6].constant = 32
+        } else if self.view.frame.size.height == 568 {
+            allVerticalConstraints.forEach { constraint in
+                constraint.constant /=  2
+            }
+            allVerticalConstraints[0].constant = 11
+            calculationMethodStackView.spacing = 8
+            let сonstraints = NSLayoutConstraint(item: calculationMethodStackView as Any,
+                                                  attribute: .right,
+                                                  relatedBy: .equal,
+                                                  toItem: self.view,
+                                                  attribute: .right,
+                                                  multiplier: 1,
+                                                  constant: -16)
+            self.view.addConstraint(сonstraints)
+        }
+        
+        super.updateViewConstraints()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         for i in resultViews {
             i.layer.cornerRadius = 35 / 4
         }

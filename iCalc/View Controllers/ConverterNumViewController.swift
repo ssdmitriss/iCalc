@@ -22,9 +22,30 @@ class ConverterNumViewController: UIViewController {
     @IBOutlet weak var generalTextView: UITextView!
     
     @IBOutlet weak var angleLabel: UILabel!
+    @IBOutlet var resultViews: [UIView]!
     
-    let converter = Converter.shared
-    let coreData = CoreDataMethods.shared
+    @IBOutlet var customViews: [UIView]!
+    
+    @IBOutlet var allVerticalConstraints: [NSLayoutConstraint]!
+    
+    
+    private let converter = Converter.shared
+    private let coreData = CoreDataMethods.shared
+    
+    override func updateViewConstraints() {
+        
+        if (812...896).contains(self.view.frame.size.height) {
+            
+        } else if self.view.frame.size.height == 667 {
+            allVerticalConstraints[0].constant = 32
+            allVerticalConstraints[1].constant = 32
+        } else if self.view.frame.size.height == 568 {
+            allVerticalConstraints[0].constant = 13
+            allVerticalConstraints[1].constant = 8
+        }
+        
+        super.updateViewConstraints()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -39,6 +60,19 @@ class ConverterNumViewController: UIViewController {
         setupTextViews()
         angleLabel.text = "\u{2220}"
         argumentTextField.placeholder = "\u{03C6}\u{00B0}"
+        
+        for testView in customViews {
+            
+            //            testView.layer.borderWidth = 1
+            //            testView.layer.borderColor = UIColor.lightGray.cgColor
+            testView.layer.cornerRadius = 35 / 4
+            testView.backgroundColor = .secondarySystemBackground
+            testView.layer.shadowColor = UIColor.black.cgColor
+            testView.layer.shadowOffset = CGSize(width: 0, height: 0)
+            testView.layer.shadowRadius = 7
+            testView.layer.shadowOpacity = 0.2
+        }
+        
     }
     
     private func setupButtons() {
@@ -61,8 +95,11 @@ class ConverterNumViewController: UIViewController {
         generalTextView.text = "a + i\u{00B7}b"
         generalTextView.textColor = .opaqueSeparator
         
-//        generalTextView.textContainer.maximumNumberOfLines = 2
-//        generalTextView.textContainer.lineBreakMode = .byWordWrapping
+        for view in resultViews {
+            view.layer.cornerRadius = 35 / 4
+        }
+        //        generalTextView.textContainer.maximumNumberOfLines = 2
+        //        generalTextView.textContainer.lineBreakMode = .byWordWrapping
         
     }
     
@@ -71,9 +108,9 @@ class ConverterNumViewController: UIViewController {
         switch sender.tag {
         case 0:
             guard let exponentialNum = converter.textFieldsToExpForm(
-                    realTextField: realTextField,
-                    imaginaryTextField: imaginaryTextField,
-                    wrongFormatAlert: wrongFormatAlert
+                realTextField: realTextField,
+                imaginaryTextField: imaginaryTextField,
+                wrongFormatAlert: wrongFormatAlert
             ) else { return }
             exponentialTextView.textColor = .black
             exponentialTextView.text = "\(exponentialNum.module) \u{2220} \(exponentialNum.argument)"
@@ -81,9 +118,9 @@ class ConverterNumViewController: UIViewController {
             
         case 1:
             guard let generalNum = converter.textFieldsToGeneralForm(
-                    moduleTextField: moduleTextField,
-                    argumentTextField: argumentTextField,
-                    wrongFormatAlert: wrongFormatAlert
+                moduleTextField: moduleTextField,
+                argumentTextField: argumentTextField,
+                wrongFormatAlert: wrongFormatAlert
             ) else { return }
             generalTextView.textColor = .black
             if generalNum.imaginaryNum >= 0 {
@@ -124,13 +161,13 @@ extension ConverterNumViewController: UITextFieldDelegate {
         super.touchesBegan(touches, with: event)
         view.endEditing(true)
     }
- 
+    
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         addButtonsTo(textField)
         return true
     }
     
-        private func addButtonsTo(_ textField: UITextField) {
+    private func addButtonsTo(_ textField: UITextField) {
         
         let keyboardToolbar = UIToolbar()
         textField.inputAccessoryView = keyboardToolbar
@@ -184,7 +221,7 @@ extension ConverterNumViewController: UITextFieldDelegate {
             argumentTextField.text = "-"
         }
     }
-
+    
 }
 
 //MARK: - UIALertControllrel
